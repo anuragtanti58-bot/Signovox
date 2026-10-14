@@ -57,12 +57,17 @@ export class GestureEngine {
         continue;
       }
 
-      const seqCheck = this.protocol.checkAndRecordSequence(pkt.sequenceNumber);
-      if (seqCheck.isDuplicate) {
-        this.metrics.duplicateCount++;
-      }
-      this.metrics.packetLossEstimated += seqCheck.droppedLossCount;
-      this.metrics.lastSequenceNumber = pkt.sequenceNumber;
+      
+const seqCheck = this.protocol.checkAndRecordSequence(pkt.sequenceNumber);
+
+if (seqCheck.isDuplicate) {
+  this.metrics.duplicateCount++;
+  continue;
+}
+
+this.metrics.packetLossEstimated += seqCheck.droppedLossCount;
+this.metrics.lastSequenceNumber = pkt.sequenceNumber;
+
 
       const gestureDef = getGestureById(pkt.gestureId);
       if (!gestureDef) {
